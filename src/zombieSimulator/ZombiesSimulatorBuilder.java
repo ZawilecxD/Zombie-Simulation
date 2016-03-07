@@ -5,6 +5,7 @@ import org.apache.poi.ss.formula.functions.T;
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
+import repast.simphony.context.space.graph.NetworkBuilder;
 import repast.simphony.context.space.grid.GridFactory;
 import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
@@ -21,7 +22,12 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 
 	@Override
 	public Context build(Context<Object> context) {
+		
 		context.setId("ZombieSimulator");
+		
+		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("infection network", context, true);
+		netBuilder.buildNetwork();
+		
 		ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
 		ContinuousSpace<Object> space = spaceFactory.createContinuousSpace("space", context, 
 				new RandomCartesianAdder < Object >(), 

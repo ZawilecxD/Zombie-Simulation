@@ -54,6 +54,7 @@ public class Zombie {
 			}
 		}
 		moveTo(whereMostHumansAre);
+		infect();
 	}
 	
 	public void moveTo(GridPoint targetPoint) {
