@@ -1,7 +1,11 @@
 package zombieSimulator;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.works.menu.ContextualMenuFactory;
+
+import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -9,8 +13,10 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+import repast.simphony.space.graph.Network;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 public class Zombie {
@@ -62,5 +68,31 @@ public class Zombie {
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			moved = true;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void infect() {
+		GridPoint point = grid.getLocation(this);
+		List<Object> people = new ArrayList<Object>();
+		for(Object obj : grid.getObjectsAt(point.getX(), point.getY())) {
+			if(obj instanceof Human) {
+				people.add(obj);
+			}
+		}
+		
+		if(people.size() > 0) {
+			int idx = RandomHelper.nextIntFromTo(0, people.size() -1);
+			Object humanObj = people.get(idx);
+			NdPoint spacePoint = space.getLocation(humanObj);
+			Context<Object> context = ContextUtils.getContext(humanObj);
+			context.remove(humanObj);
+			Zombie zombie = new Zombie(space, grid);
+			context.add(zombie);
+			space.moveTo(zombie,  spacePoint.getX(), spacePoint.getY());
+			grid.moveTo(zombie, (int)spacePoint.getX(), (int)spacePoint.getY());
+			Network<Object> network = (Network<Object>) context.getProjection("infection network");
+			network.addEdge(this, zombie);
+		}
+		
 	}
 }
