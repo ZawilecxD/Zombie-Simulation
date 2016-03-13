@@ -1,0 +1,13 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>file agent numbers per tick</name>
+  <dataSet>Agents numbers</dataSet>
+  <delimiter>,            </delimiter>
+  <format>LINE</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>Human number</string>
+    <string>Zombie number</string>
+  </sourceIds>
+  <fileName>AgentsNumbers.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

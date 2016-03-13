@@ -1,0 +1,13 @@
+<repast.simphony.data2.engine.ConsoleSinkDescriptor>
+  <name>console number of agents per tick</name>
+  <dataSet>Agents numbers</dataSet>
+  <delimiter>,</delimiter>
+  <format>LINE</format>
+  <sourceIds class="linked-hash-set">
+    <string>Human number</string>
+    <string>Zombie number</string>
+    <string>tick</string>
+  </sourceIds>
+  <enabled>true</enabled>
+  <outputStream>OUT</outputStream>
+</repast.simphony.data2.engine.ConsoleSinkDescriptor>
