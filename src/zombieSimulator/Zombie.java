@@ -6,6 +6,8 @@ import java.util.List;
 import org.antlr.works.menu.ContextualMenuFactory;
 
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.engine.schedule.Schedule;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -23,11 +25,17 @@ public class Zombie {
 
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
+	private int speed;
 	private boolean moved = false;
+	private int infected;
+	private int zombieID;
 	
-	public Zombie(ContinuousSpace<Object> space, Grid<Object> grid) {
+	public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, int speed) {
 		this.space = space;
 		this.grid = grid;
+		this.speed = speed;
+		this.infected = 0;
+		this.zombieID = ZombiesSimulatorBuilder.zombieId++;
 	}
 	
 	@ScheduledMethod(start = 1, interval = 1)
@@ -64,7 +72,7 @@ public class Zombie {
 			NdPoint currentPoint = space.getLocation(this);
 			NdPoint toPoint = new NdPoint(targetPoint.getX(), targetPoint.getY());
 			double angle = SpatialMath.calcAngleFor2DMovement(space, currentPoint, toPoint);
-			space.moveByVector(this, 1, angle, 0);
+			space.moveByVector(this, speed, angle, 0);
 			currentPoint = space.getLocation(this);
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			moved = true;
@@ -87,7 +95,9 @@ public class Zombie {
 			NdPoint spacePoint = space.getLocation(humanObj);
 			Context<Object> context = ContextUtils.getContext(humanObj);
 			context.remove(humanObj);
-			Zombie zombie = new Zombie(space, grid);
+			Zombie zombie = new Zombie(space, grid, speed);
+			this.infected++;
+//			System.out.println("New infected at tick "+ RunEnvironment.getInstance().getCurrentSchedule().getTickCount());
 			context.add(zombie);
 			space.moveTo(zombie,  spacePoint.getX(), spacePoint.getY());
 			grid.moveTo(zombie, (int)spacePoint.getX(), (int)spacePoint.getY());
@@ -96,4 +106,14 @@ public class Zombie {
 		}
 		
 	}
+
+	
+	public int getInfectedCount() {
+		return infected;
+	}
+	
+	public int getZombieId() {
+		return zombieID;
+	}
+
 }

@@ -1,0 +1,12 @@
+<repast.simphony.data2.engine.ConsoleSinkDescriptor>
+  <name>Zombies Infections Count</name>
+  <dataSet>Zombies Infections</dataSet>
+  <delimiter>,</delimiter>
+  <format>LINE</format>
+  <sourceIds class="linked-hash-set">
+    <string>InfectedCount</string>
+    <string>ZombieId</string>
+  </sourceIds>
+  <enabled>true</enabled>
+  <outputStream>OUT</outputStream>
+</repast.simphony.data2.engine.ConsoleSinkDescriptor>

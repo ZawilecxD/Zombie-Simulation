@@ -19,11 +19,13 @@ public class Human {
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
 	private int stamina;
+	private int speed;
 	private int startingStamina;
 	
-	public Human(ContinuousSpace<Object> space, Grid<Object> grid, int startingEnergy) {
+	public Human(ContinuousSpace<Object> space, Grid<Object> grid, int startingEnergy, int speed) {
 		this.space = space;
 		this.grid = grid;
+		this.speed = speed;
 		this.stamina = startingEnergy;
 		this.startingStamina = startingEnergy;
 	}
@@ -63,7 +65,7 @@ public class Human {
 			NdPoint currentPoint = space.getLocation(this);
 			NdPoint toPoint = new NdPoint(targetPoint.getX(), targetPoint.getY());
 			double angle = SpatialMath.calcAngleFor2DMovement(space, currentPoint, toPoint);
-			space.moveByVector(this, 2, angle, 0); //2 to dystans ruchu (ile unitow pokona)
+			space.moveByVector(this, speed, angle, 0); //2 to dystans ruchu (ile unitow pokona)
 			currentPoint = space.getLocation(this);
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			stamina--;

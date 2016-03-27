@@ -8,6 +8,10 @@ import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
 import repast.simphony.context.space.graph.NetworkBuilder;
 import repast.simphony.context.space.grid.GridFactory;
 import repast.simphony.context.space.grid.GridFactoryFinder;
+import repast.simphony.data2.DataSource;
+import repast.simphony.data2.builder.AggregateDataSetBuilder;
+import repast.simphony.data2.builder.DataSetBuilder;
+import repast.simphony.data2.builder.NonAggregateDataSetBuilder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
@@ -15,13 +19,17 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.RandomCartesianAdder;
+import repast.simphony.space.grid.DefaultGrid;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.WrapAroundBorders;
+import repast.simphony.visualization.grid.Grid2DLayout;
 
 public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 
+	public static int zombieId = 0;
+	
 	@Override
 	public Context build(Context<Object> context) {
 		
@@ -45,15 +53,19 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 		Parameters params = RunEnvironment.getInstance().getParameters();
 
 		
+		//parameters
 		int zombieNum = (Integer)params.getValue ("zombiesCount");
 		int peopleNum = (Integer)params.getValue ("humanCount");
+		int humanSpeed = (Integer) params.getValue("humanSpeed");
+		int humanStartingStamina = (Integer) params.getValue("humanStartingStamina");
+		int zombieSpeed = (Integer) params.getValue("zombieSpeed");
+				
 		for(int i=0;i<zombieNum; i++) {
-			context.add(new Zombie(space, grid));
+			context.add(new Zombie(space, grid, zombieSpeed));
 		}
 		
 		for(int i=0;i<peopleNum;i++) {
-			int energy = RandomHelper.nextIntFromTo(4, 10);
-			context.add(new Human(space, grid, energy));
+			context.add(new Human(space, grid, humanStartingStamina, humanSpeed));
 		}
 		
 		for(Object obj : context) {
@@ -64,4 +76,5 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 		return context;
 	}
 
+	
 }

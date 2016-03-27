@@ -1,0 +1,12 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>file zombie infections count</name>
+  <dataSet>Zombies Infections</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>ZombieId</string>
+    <string>InfectedCount</string>
+  </sourceIds>
+  <fileName>ZombieInfectionsCount.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>
