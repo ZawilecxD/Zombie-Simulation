@@ -29,10 +29,11 @@ import repast.simphony.visualization.grid.Grid2DLayout;
 public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 
 	public static int zombieId = 0;
+	public static int maxGroupSize = 5;
 	
 	@Override
 	public Context build(Context<Object> context) {
-		
+		zombieId = 0;
 		context.setId("ZombieSimulator");
 		
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("infection network", context, true);
@@ -59,6 +60,7 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 		int humanSpeed = (Integer) params.getValue("humanSpeed");
 		int humanStartingStamina = (Integer) params.getValue("humanStartingStamina");
 		int zombieSpeed = (Integer) params.getValue("zombieSpeed");
+		maxGroupSize = (Integer) params.getValue("maxGroupSize");
 				
 		for(int i=0;i<zombieNum; i++) {
 			context.add(new Zombie(space, grid, zombieSpeed));

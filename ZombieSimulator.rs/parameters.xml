@@ -18,6 +18,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="maxGroupSize" displayName="max Group Size" type="int" 
+						defaultValue="5" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="humanStartingStamina" displayName="humanStartingStamina" type="int" 
 						defaultValue="8" 
 						isReadOnly="false" 

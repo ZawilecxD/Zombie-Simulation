@@ -85,6 +85,11 @@ public class Zombie {
 		List<Object> people = new ArrayList<Object>();
 		for(Object obj : grid.getObjectsAt(point.getX(), point.getY())) {
 			if(obj instanceof Human) {
+				if(humanWon((Human)obj)) {
+					Context<Object> context = ContextUtils.getContext(this);
+					context.remove(this);
+					return;
+				}
 				people.add(obj);
 			}
 		}
@@ -107,6 +112,12 @@ public class Zombie {
 		
 	}
 
+	private boolean humanWon(Human human) {
+		if(RandomHelper.nextIntFromTo(1, 100) < human.fightAbility) {
+			return true;
+		}
+		return false;
+	}
 	
 	public int getInfectedCount() {
 		return infected;
