@@ -8,6 +8,6 @@
     <string>Zombie number</string>
     <string>tick</string>
   </sourceIds>
-  <enabled>true</enabled>
+  <enabled>false</enabled>
   <outputStream>OUT</outputStream>
 </repast.simphony.data2.engine.ConsoleSinkDescriptor>

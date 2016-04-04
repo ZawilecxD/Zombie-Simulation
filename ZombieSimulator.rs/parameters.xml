@@ -24,6 +24,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="campsCount" displayName="campsCount" type="int" 
+						defaultValue="5" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="humanStartingStamina" displayName="humanStartingStamina" type="int" 
 						defaultValue="8" 
 						isReadOnly="false" 

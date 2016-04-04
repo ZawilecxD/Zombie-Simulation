@@ -55,13 +55,18 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 
 		
 		//parameters
+		int campsNum = (Integer) params.getValue("campsCount");
 		int zombieNum = (Integer)params.getValue ("zombiesCount");
 		int peopleNum = (Integer)params.getValue ("humanCount");
 		int humanSpeed = (Integer) params.getValue("humanSpeed");
 		int humanStartingStamina = (Integer) params.getValue("humanStartingStamina");
 		int zombieSpeed = (Integer) params.getValue("zombieSpeed");
 		maxGroupSize = (Integer) params.getValue("maxGroupSize");
-				
+		
+		for(int i=0; i<campsNum; i++) {
+			context.add(new HumanCamp(space, grid));
+		}
+		
 		for(int i=0;i<zombieNum; i++) {
 			context.add(new Zombie(space, grid, zombieSpeed));
 		}

@@ -7,6 +7,10 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
+      <string>zombieSimulator.HumanCamp</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
       <string>zombieSimulator.Zombie</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
@@ -15,6 +19,10 @@
     <entry>
       <string>zombieSimulator.Human</string>
       <string>zombieSimulator.Human.style_0.xml</string>
+    </entry>
+    <entry>
+      <string>zombieSimulator.HumanCamp</string>
+      <string>zombieSimulator.HumanCamp.style_0.xml</string>
     </entry>
     <entry>
       <string>zombieSimulator.Zombie</string>
@@ -31,7 +39,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-556978615</hashCode>
+    <hashCode>648522469</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -39,11 +47,15 @@
   <layerOrder>
     <entry>
       <string>zombieSimulator.Human</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>zombieSimulator.HumanCamp</string>
       <int>0</int>
     </entry>
     <entry>
       <string>zombieSimulator.Zombie</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
   </layerOrder>
   <projections>
@@ -85,7 +97,7 @@
   </projectionDescriptors>
   <props/>
   <backgroundColor>
-    <red>255</red>
+    <red>153</red>
     <green>255</green>
     <blue>255</blue>
     <alpha>255</alpha>

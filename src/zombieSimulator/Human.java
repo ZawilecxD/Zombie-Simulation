@@ -23,12 +23,11 @@ public class Human {
 	private int speed;
 	private int startingStamina;
 	
-	private boolean alreadyInGroup;
-	private boolean escapeNow;
-	
 	public int fightAbility;
 	
-	private GridCell<Human> targetedCellForGroup;
+	public boolean stopMoving;
+	
+	private GridPoint targetedCamp;
 	private int biggestGroupCount = 0;
 	
 	public Human(ContinuousSpace<Object> space, Grid<Object> grid, int startingEnergy, int speed) {
@@ -38,62 +37,44 @@ public class Human {
 		this.stamina = startingEnergy;
 		this.startingStamina = startingEnergy;
 		this.fightAbility = RandomHelper.nextIntFromTo(1, 50);
+		this.stopMoving = false;
 	}
 	
-//	@ScheduledMethod(start = 1, interval = 1)  //people group up
-//	public void takeStep() {
-//		if(escapeNow || alreadyInGroup) {
-//			return;
-//		}
-//		
-//		
-//		
-//		if(targetedCellForGroup == null) {
-//			
-//			GridPoint point = grid.getLocation(this);
-//			
-//			GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, point, Human.class, 1,10);
-//			
-//			List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
-//			SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-//			
-//			for(GridCell<Human> cell : gridCells) {
-////				if(cell.size() > ZombiesSimulatorBuilder.maxGroupSize) {
-////					targetedCellForGroup = null;
-////					return;
-////				}
-//				if(cell.size() > 0) {
-//					targetedCellForGroup  = cell;
-//					
-//					biggestGroupCount = cell.size();
-//					
-//				}
-//			}
-//		}
-//		
-//		if(targetedCellForGroup != null ) {
-//			GridPoint point = grid.getLocation(this);
-//			if(point.equals(targetedCellForGroup.getPoint())) {
-//				alreadyInGroup = true;
-//				return;
-//			}
-//			moveTo(targetedCellForGroup.getPoint(), 1);
-//			System.out.println("going "+biggestGroupCount+" "+targetedCellForGroup.size());
-//		} else {
-//			return;
-//		}
-//		
-//	}
 	
-	@Watch(watcheeClassName = "zombieSimulator.Zombie", watcheeFieldNames = "moved",
+	@ScheduledMethod(start = 1, interval = 1)
+	public void takeStep() {
+		
+		GridPoint point = grid.getLocation(this);
+		
+		if(targetedCamp != null) {
+			if(grid.getDistance(point, targetedCamp) < 2) {
+				stopMoving = true;
+			}	
+			if(stopMoving) return;
+			moveTo(targetedCamp, 1);
+		} else if(targetedCamp == null){
+			GridCellNgh<HumanCamp> nghCreator = new GridCellNgh<HumanCamp>(grid, point, HumanCamp.class, 50,50);
+			List<GridCell<HumanCamp>> gridCells = nghCreator.getNeighborhood(true);
+			SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+			
+			for(GridCell<HumanCamp> cell : gridCells) {
+				if(cell.size() > 0) {
+					targetedCamp  = cell.getPoint();
+				}
+			}
+		}
+		
+		
+	}
+	
+	
+	/*@Watch(watcheeClassName = "zombieSimulator.Zombie", watcheeFieldNames = "moved",
 			query = "within_moore 1",
 			whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void escapeOrFight() {
 		
-		if(alreadyInGroup) {
-			return;
-		}
-		escapeNow = true;
+		if(stopMoving) return;
+		
 		//punkt aktualnej lokacji czlowieka
 		GridPoint currentPoint = grid.getLocation(this);
 		
@@ -116,20 +97,16 @@ public class Human {
 			stamina = startingStamina;
 		}
 		
-		if(!alreadyInGroup) {
-			escapeNow = false;
-		}
-		
-	}
+	}*/
 	
 	public void moveTo(GridPoint targetPoint, int moveSpeed) {
-		if(targetPoint.equals(grid.getLocation(this))) {
+		if(stopMoving) {
 			return;
 		} else {
 			NdPoint currentPoint = space.getLocation(this);
 			NdPoint toPoint = new NdPoint(targetPoint.getX(), targetPoint.getY());
 			double angle = SpatialMath.calcAngleFor2DMovement(space, currentPoint, toPoint);
-			space.moveByVector(this, moveSpeed, angle, 0); //2 to dystans ruchu (ile unitow pokona)
+			space.moveByVector(this, moveSpeed, angle, 0); 
 			currentPoint = space.getLocation(this);
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			stamina--;

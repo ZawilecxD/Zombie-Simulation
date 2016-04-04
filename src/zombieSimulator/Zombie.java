@@ -30,6 +30,9 @@ public class Zombie {
 	private int infected;
 	private int zombieID;
 	
+	private List<GridPoint> previousPoints =  new ArrayList<>();
+	private int movesRepeated;
+	
 	public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, int speed) {
 		this.space = space;
 		this.grid = grid;
@@ -54,15 +57,34 @@ public class Zombie {
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 		
 		GridPoint whereMostHumansAre = null;
-		int maxCount = -1;
+		int maxCount = 0;
 		for(GridCell<Human> cell : gridCells) {
-			if(cell.size() > maxCount) {
+			if(cell.size() >= maxCount) {
 				whereMostHumansAre  = cell.getPoint();
+				
 				maxCount = cell.size();
 			}
 		}
+		
+		previousPoints.add(whereMostHumansAre);
+		int lastIndex = previousPoints.size()-1;
+		if(previousPoints.size() > 4) {
+			if(samePoints(previousPoints.get(lastIndex), previousPoints.get(lastIndex-2)) && samePoints(previousPoints.get(lastIndex-1), previousPoints.get(lastIndex-3))) { //zombie is stack between 2 points
+				System.out.println("ID:"+zombieID+" "+previousPoints.get(0).getX()+" "+previousPoints.get(0).getY()+" VS "+previousPoints.get(2).getX()+" " +previousPoints.get(2).getY());
+				whereMostHumansAre = new GridPoint(whereMostHumansAre.getX()+1, whereMostHumansAre.getY()-2);
+			}
+		}
+		
 		moveTo(whereMostHumansAre);
 		infect();
+	}
+	
+	private boolean samePoints(GridPoint point1, GridPoint point2) {
+		if(point1.getX() == point2.getX() || point1.getY() == point2.getY()) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void moveTo(GridPoint targetPoint) {
@@ -74,6 +96,7 @@ public class Zombie {
 			double angle = SpatialMath.calcAngleFor2DMovement(space, currentPoint, toPoint);
 			space.moveByVector(this, speed, angle, 0);
 			currentPoint = space.getLocation(this);
+			
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			moved = true;
 		}
