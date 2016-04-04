@@ -28,6 +28,9 @@ public class Human {
 	
 	public int fightAbility;
 	
+	private GridCell<Human> targetedCellForGroup;
+	private int biggestGroupCount = 0;
+	
 	public Human(ContinuousSpace<Object> space, Grid<Object> grid, int startingEnergy, int speed) {
 		this.space = space;
 		this.grid = grid;
@@ -37,32 +40,50 @@ public class Human {
 		this.fightAbility = RandomHelper.nextIntFromTo(1, 50);
 	}
 	
-	@ScheduledMethod(start = 1, interval = 3)  //people group up
-	public void takeStep() {
-		if(escapeNow || alreadyInGroup) {
-			return;
-		}
-		GridPoint point = grid.getLocation(this);
-		
-		GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, point, Human.class, 1,10);
-		
-		List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
-		//SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-		
-		GridPoint whereMostHumansAre = null;
-		int maxCount = -1;
-		for(GridCell<Human> cell : gridCells) {
-			if(cell.size() > maxCount) {
-				if(cell.size() > ZombiesSimulatorBuilder.maxGroupSize) {
-					alreadyInGroup = true;
-					fightAbility+=20; //group bonus
-				}
-				whereMostHumansAre  = cell.getPoint();
-				maxCount = cell.size();
-			}
-		}
-		moveTo(whereMostHumansAre, 1); //we just walk
-	}
+//	@ScheduledMethod(start = 1, interval = 1)  //people group up
+//	public void takeStep() {
+//		if(escapeNow || alreadyInGroup) {
+//			return;
+//		}
+//		
+//		
+//		
+//		if(targetedCellForGroup == null) {
+//			
+//			GridPoint point = grid.getLocation(this);
+//			
+//			GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, point, Human.class, 1,10);
+//			
+//			List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
+//			SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+//			
+//			for(GridCell<Human> cell : gridCells) {
+////				if(cell.size() > ZombiesSimulatorBuilder.maxGroupSize) {
+////					targetedCellForGroup = null;
+////					return;
+////				}
+//				if(cell.size() > 0) {
+//					targetedCellForGroup  = cell;
+//					
+//					biggestGroupCount = cell.size();
+//					
+//				}
+//			}
+//		}
+//		
+//		if(targetedCellForGroup != null ) {
+//			GridPoint point = grid.getLocation(this);
+//			if(point.equals(targetedCellForGroup.getPoint())) {
+//				alreadyInGroup = true;
+//				return;
+//			}
+//			moveTo(targetedCellForGroup.getPoint(), 1);
+//			System.out.println("going "+biggestGroupCount+" "+targetedCellForGroup.size());
+//		} else {
+//			return;
+//		}
+//		
+//	}
 	
 	@Watch(watcheeClassName = "zombieSimulator.Zombie", watcheeFieldNames = "moved",
 			query = "within_moore 1",
@@ -95,7 +116,10 @@ public class Human {
 			stamina = startingStamina;
 		}
 		
-		escapeNow = false;
+		if(!alreadyInGroup) {
+			escapeNow = false;
+		}
+		
 	}
 	
 	public void moveTo(GridPoint targetPoint, int moveSpeed) {
