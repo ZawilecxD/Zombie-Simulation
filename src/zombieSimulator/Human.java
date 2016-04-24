@@ -2,6 +2,7 @@ package zombieSimulator;
 
 import java.util.List;
 
+import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
@@ -13,6 +14,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 public class Human {
@@ -22,8 +24,12 @@ public class Human {
 	private int stamina;
 	private int speed;
 	private int startingStamina;
+	private int startingFightAbility;
 	
 	public int fightAbility;
+	public Weapon weapon = null;
+	
+	public int hunger; //the bigger the hungrier
 	
 	public boolean stopMoving;
 	
@@ -37,12 +43,31 @@ public class Human {
 		this.stamina = startingEnergy;
 		this.startingStamina = startingEnergy;
 		this.fightAbility = RandomHelper.nextIntFromTo(1, 50);
+		this.startingFightAbility = fightAbility;
 		this.stopMoving = false;
 	}
 	
 	
-	@ScheduledMethod(start = 1, interval = 1)
+	@ScheduledMethod(start = 1, interval = 5)
+	public void hungerGrows() {
+		int amount = RandomHelper.nextIntFromTo(1, 5);
+		hunger += amount;
+	}
+	
+	@ScheduledMethod(start = 1, interval = 5)
 	public void takeStep() {
+		
+		if(hunger == 100) {
+			Context<Object> context = ContextUtils.getContext(this);
+			context.remove(this);
+			return;
+		}
+		
+		if(hunger > 50) {
+			this.fightAbility = (int)Math.ceil(this.fightAbility/2);
+		} else {
+			this.fightAbility = startingFightAbility;
+		}
 		
 		GridPoint point = grid.getLocation(this);
 		
@@ -111,6 +136,10 @@ public class Human {
 			grid.moveTo(this, (int)currentPoint.getX(), (int)currentPoint.getY());
 			stamina--;
 		}
+	}
+	
+	public void feed(int amount) {
+		this.hunger -= amount;
 	}
 	
 }

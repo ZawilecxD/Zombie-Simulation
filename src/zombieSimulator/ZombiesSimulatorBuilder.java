@@ -30,6 +30,7 @@ public class ZombiesSimulatorBuilder implements ContextBuilder<Object> {
 
 	public static int zombieId = 0;
 	public static int maxGroupSize = 5;
+	public static int humanBaseDmg = 10;
 	
 	@Override
 	public Context build(Context<Object> context) {
