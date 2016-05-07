@@ -64,6 +64,7 @@ public class Human {
 		}
 		
 		if(hunger > 50) {
+			startingFightAbility = this.fightAbility; //last level of fightAbility before being exhausted
 			this.fightAbility = (int)Math.ceil(this.fightAbility/2);
 		} else {
 			this.fightAbility = startingFightAbility;

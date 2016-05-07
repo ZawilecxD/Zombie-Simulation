@@ -20,15 +20,13 @@ public class HumanCamp {
 	public boolean ready = true;
 	private ArrayList<Human> humans = new ArrayList<>();
 	private ArrayList<Human> defenslessHumans = new ArrayList<>();
-	private int humanCount;
 	public int chanceToForgeWeapon;
 	public int foodCount;
 	
-	public HumanCamp(ContinuousSpace<Object> space, Grid<Object> grid) {
-		humanCount = 0;
+	public HumanCamp(ContinuousSpace<Object> space, Grid<Object> grid, int chanceForWeaponForge) {
 		this.space = space;
 		this.grid = grid;
-		this.chanceToForgeWeapon = RandomHelper.nextIntFromTo(1,100);
+		this.chanceToForgeWeapon = chanceForWeaponForge;
 	}
 	
 	public void addNewHuman(Human human) {
@@ -36,7 +34,6 @@ public class HumanCamp {
 		if(human.weapon == null) {
 			defenslessHumans.add(human);
 		}
-		this.humanCount = humans.size();
 	}
 	
 	@ScheduledMethod(start = 1, interval = 10)
@@ -76,8 +73,11 @@ public class HumanCamp {
 	@ScheduledMethod(start = 1, interval = 25)
 	public void feedPeople() {
 		for(Human h : humans) {
-			h.feed((int) Math.ceil(foodCount/humans.size()));
+			int amount = (int) Math.ceil(foodCount/humans.size());
+			h.feed(amount);
+			this.foodCount -= foodCount/humans.size();
 		}
+		
 	}
 	
 	
